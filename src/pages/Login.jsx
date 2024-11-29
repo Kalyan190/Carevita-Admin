@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import {assets} from '../assets/assets_admin/assets'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { AdminContext } from '../context/adminContext';
+import { AdminContext } from '../context/AdminContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 

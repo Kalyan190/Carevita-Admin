@@ -47,13 +47,24 @@ const AddDoctors = () => {
 
          if(data.success){
             toast.success(data.message)
+            setDocImg(false)
+            setName('')
+            setEmail('')
+            setPassword('')
+            setFees('')
+            setAbout('')
+            setAddress1('')
+            setAddress2('')
+            setDegree('')
+            setExperience('1 Year')
+            setSpeciality('General Physician')
          }else{
             toast.error(data.message)
          }
 
       } catch (error) {
          toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
-         console.error(error);
+         console.log(error.response.data.message);
       }
    }
 

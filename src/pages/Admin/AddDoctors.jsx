@@ -3,6 +3,7 @@ import { assets } from '../../assets/assets_admin/assets'
 import { AdminContext } from '../../context/AdminContext';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { ColorRing } from 'react-loader-spinner'; 
 
 const AddDoctors = () => {
     
@@ -17,16 +18,20 @@ const AddDoctors = () => {
    const [degree, setDegree] = useState('');
    const [address1, setAddress1] = useState('');
    const [addresss2, setAddress2] = useState('');
+   const [loading,setLoading] = useState(false)
 
    const {backendUrl,aToken} = useContext(AdminContext)
 
    const onSubmitHandler = async(event)=>{
       event.preventDefault()
+      if(loading) return;
 
       try {
          if(!docImg){
             return toast.error("Image Not Selected")
          }
+         setLoading(true)
+
          const formData = new FormData();
          formData.append('image',docImg);
          formData.append('name', name);
@@ -65,6 +70,8 @@ const AddDoctors = () => {
       } catch (error) {
          toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
          console.log(error.response.data.message);
+      }finally{
+         setLoading(false)
       }
    }
 
@@ -149,7 +156,24 @@ const AddDoctors = () => {
                <p className='mt-4 mb-2 '>About Doctor</p>
                <textarea onChange={(e) => setAbout(e.target.value)} value={about} className='w-full border rounded px-4 pt-2' placeholder='Write about doctor' required rows={5} />
             </div>
-            <button type='submit' className='bg-primary px-10 py-3 mt-4 text-white rounded-full'>Add Doctor</button>
+            <button
+               type="submit"
+               className="bg-primary px-10 py-3 mt-4 text-white rounded-full flex items-center"
+               disabled={loading} // Disable button while loading
+            >
+               {loading ? 'Adding Doctor...' : 'Add Doctor'}
+               {loading && (
+                 
+                     <ColorRing
+                        visible={true}
+                        height="30"
+                        width="30"
+                        ariaLabel="color-ring-loading"
+                        colors={['#fff', '#fff', '#fff', '#fff', '#fff']}
+                     />
+               )}
+            </button>
+            
          </div>
       </form>
    )

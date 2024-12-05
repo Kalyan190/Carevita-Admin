@@ -1,13 +1,13 @@
 import React, { useContext, useState } from 'react'
-import {assets} from '../assets/assets_admin/assets'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { AdminContext } from '../context/AdminContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
-   const [state, setState] = useState('Admin')
+const AdminLogin = () => {
    const {setAToken,backendUrl} = useContext(AdminContext)
+   const navigate = useNavigate();
 
    const [email, setEmail] = useState('')
    const [password, setPassword] = useState('')
@@ -18,7 +18,7 @@ const Login = () => {
       event.preventDefault()
 
       try {
-         if(state === 'Admin'){
+        
             const {data} = await axios.post(backendUrl + '/api/admin/login',{
                email,
                password
@@ -28,12 +28,11 @@ const Login = () => {
                localStorage.setItem('aToken',data.token)
                setAToken(data.token)
                toast.success(data.message);
+               navigate('/admin-dashboard')
             }else{
                toast.error(data.message);
             }
-         }else{
-
-         }
+         
       } catch (error) {
          toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
          console.error(error);
@@ -44,7 +43,7 @@ const Login = () => {
    }
 
    return (
-      <div className='flex mx-16 my-10 max-sm:mx-auto '>
+      <div className='flex mx-16 my-10 max-sm:mx-auto'>
          <div className=' flex w-full'>
             <div className='hidden lg:flex h-[80vh] w-1/2 items-center justify-center relative'>
                <DotLottieReact
@@ -55,9 +54,9 @@ const Login = () => {
             </div>
             <form onSubmit={onSubmitHandler} className='w-full flex items-center justify-center lg:w-1/2'>
                <div className='w-11/12 max-w-[600px] px-10 py-3 max-sm:px-4 rounded-3xl bg-white border-2 border-gray-100 max-sm:text-center '>
-                  <h1 className='text-4xl max-sm:text-3xl font-semibold'>Welcome Back {
-                     state === 'Admin' ? <span>Admin</span> : <span>Doctor</span>
-                  }</h1>
+                  <h1 className='text-4xl max-sm:text-3xl font-semibold'>Welcome Back  
+                      <span> Admin</span> 
+                  </h1>
                   <p className='font-medium text-lg text-gray-500 mt-4'>Welcome back! Please enter your details.</p>
                   <div className='mt-4 max-sm:text-left'>
                      <div className='flex flex-col'>
@@ -99,6 +98,13 @@ const Login = () => {
                            Login
                         </button>
                      </div>
+                     <div className='mt-4 flex justify-center items-center'>
+                        <p className='font-medium text-base'>Doctor Account Login ?</p>
+                        <button
+                           className='ml-2 font-medium text-base text-violet-500 hover:text-violet-700' onClick={() => {
+                              navigate('/Doctor-login')
+                           }}>Click here</button>
+                     </div>
                   </div>
                </div>
             </form>
@@ -111,4 +117,4 @@ const Login = () => {
    )
 }
 
-export default Login
+export default AdminLogin

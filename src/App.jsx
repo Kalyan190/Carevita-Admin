@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import Login from './pages/Login'
+import AdminLogin from './pages/AdminLogin'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AdminContext } from './context/AdminContext';
@@ -10,15 +10,21 @@ import Dashboard from './pages/Admin/Dashboard';
 import AllApointments from './pages/Admin/AllApointments';
 import DoctorList from './pages/Admin/DoctorList';
 import AddDoctors from './pages/Admin/AddDoctors';
+import DoctorLogin from './pages/DoctorLogin';
+import { DoctorContext } from './context/DoctorContext';
+import DoctorDashboard from './pages/Doctor/DoctorDashboard';
+import DoctorProfile from './pages/Doctor/DoctorProfile';
+import DoctorAppointments from './pages/Doctor/DoctorAppointments';
 
 
 const App = () => {
    const { aToken } = useContext(AdminContext)
+   const {dToken} = useContext(DoctorContext)
 
-   return aToken ? (
+   return  aToken || dToken ?(
       <div className='bg-[#F8F9FD]'>
-         <ToastContainer />
-         <Navbar />
+         
+       <Navbar />
          <div className='flex items-start'>
             <Sidebar />
             <Routes>
@@ -27,14 +33,20 @@ const App = () => {
                <Route path='/all-appointments' element={<AllApointments />} />
                <Route path='/add-doctor' element={<AddDoctors />} />
                <Route path='/doctor-list' element={<DoctorList />} />
+               // doctor route
+               <Route path='/doctor-dashboard' element={<DoctorDashboard />} />
+               <Route path='/doctor-profile' element={<DoctorProfile />} />
+               <Route path='/doctor-appointments' element={<DoctorAppointments />} />
             </Routes>
          </div>
       </div>
    ) : (
-      <>
-         <Login />
-         <ToastContainer />
-      </>
+    <>
+            <Routes>
+               <Route path='/' element={<AdminLogin/>} />
+               <Route path='/Doctor-login' element={<DoctorLogin />} />
+            </Routes>
+    </>
    )
 }
 

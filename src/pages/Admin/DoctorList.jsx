@@ -1,8 +1,9 @@
 import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../../context/AdminContext'
+import { Loader } from 'lucide-react';
 
 const DoctorList = () => {
-   const { doctors, aToken, getAllDoctors, changeAvailability } = useContext(AdminContext);
+   const { doctors, aToken, getAllDoctors, changeAvailability,loading } = useContext(AdminContext);
 
    useEffect(() => {
       if (aToken) {
@@ -11,7 +12,13 @@ const DoctorList = () => {
    }, [aToken])
 
    return (
-      <div className='m-5 max-h-[90vh] overflow-y-scroll'>
+      <>
+         {loading && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+               <Loader className="animate-spin text-primary w-16 h-16" />
+            </div>
+         )}
+      <div className={`m-5 max-h-[90vh] overflow-y-scroll ${loading ? 'opacity-45':''}`}>
          <h1 className='text-lg font-medium'>All Doctors</h1>
 
          <div className='w-full flex flex-wrap gap-4 pt-5 gap-y-6 '>
@@ -32,6 +39,7 @@ const DoctorList = () => {
             }
          </div>
       </div>
+      </>
    )
 }
 

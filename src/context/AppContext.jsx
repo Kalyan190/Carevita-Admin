@@ -1,9 +1,11 @@
-import { createContext } from "react";
+import { createContext, useState } from "react";
 
 
 export const AppContext = createContext();
 
 const AppContextProvider = (props)=>{
+
+   const [loading, setLoading] = useState(false)
 
    const currency = '$'
 
@@ -25,7 +27,9 @@ const AppContextProvider = (props)=>{
      const value = {
          calculateAge,
          slotDateFormat,
-         currency
+         currency,
+         loading,
+         setLoading
      }
 
      return (

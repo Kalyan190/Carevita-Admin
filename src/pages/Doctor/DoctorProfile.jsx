@@ -3,16 +3,18 @@ import { DoctorContext } from '../../context/DoctorContext'
 import { AppContext } from '../../context/AppContext'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import { Loader } from 'lucide-react';
 
 const DoctorProfile = () => {
 
-   const { profileData, setProfileData, dToken, getProfileData, backendUrl } = useContext(DoctorContext)
+   const { profileData, setProfileData, dToken, getProfileData, backendUrl,loading,setLoading } = useContext(DoctorContext)
    const { currency } = useContext(AppContext)
 
    const [isEdit,setIsEdit] = useState(false)
 
    const updateProfile = async ()=>{
        try {
+         setLoading(true)
          const updateData = {
             address: profileData.address,
             fees: profileData.fees,
@@ -31,7 +33,10 @@ const DoctorProfile = () => {
           }
        } catch (error) {
          toast.error(error.message)
+       }finally{
+         setLoading(false)
        }
+
    }
 
 
@@ -43,8 +48,16 @@ const DoctorProfile = () => {
 
    // console.log(profileData)
 
-   return profileData && (
-      <div >
+   return ( 
+      <>
+         {loading && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+               <Loader className="animate-spin text-primary w-16 h-16" />
+            </div>
+         )}
+
+      { profileData && (
+      <div className={`${loading ? 'opacity-45':''}`}>
          <div className='flex flex-col gap-4 m-5'>
             <div>
                <img className='bg-primary/80 w-full sm:max-w-64 sm:max-h-64 rounded-lg ' src={profileData.image} alt="error" />
@@ -82,7 +95,10 @@ const DoctorProfile = () => {
 
             </div>
          </div>
-      </div>
+      </div>)
+     }
+
+      </>
    )
 }
 

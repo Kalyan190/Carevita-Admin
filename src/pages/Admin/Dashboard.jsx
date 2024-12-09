@@ -2,10 +2,11 @@ import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../../context/AdminContext'
 import { assets } from '../../assets/assets_admin/assets.js'
 import { AppContext } from '../../context/AppContext.jsx'
+import { Loader } from 'lucide-react';
 
 const Dashboard = () => {
 
-   const { aToken, getDashData, cancelAppointment, dashData } = useContext(AdminContext)
+   const { aToken, getDashData, cancelAppointment, dashData, loading } = useContext(AdminContext)
    const { slotDateFormat } = useContext(AppContext)
 
    useEffect(() => {
@@ -14,8 +15,18 @@ const Dashboard = () => {
       }
    }, [aToken])
 
-   return dashData && (
-      <div className='m-5'>
+   return (
+      <>
+
+         {loading && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+               <Loader className="animate-spin text-primary w-16 h-16" />
+            </div>
+         )}
+
+
+      {dashData && (
+      <div className={`m-5 ${loading ? 'opacity-45':''}`}>
          <div className='flex flex-wrap gap-3'>
             <div className='flex items-center gap-2 bg-white p-4 min-w-52 rounded border-2 border-gray-100 cursor-pointer hover:scale-105 transition-all'>
                <img className='w-14' src={assets.doctor_icon} alt="error" />
@@ -67,7 +78,9 @@ const Dashboard = () => {
          </div>
          </div>
       </div>
-   )
+   )}
+   </>
+)
 }
 
 export default Dashboard

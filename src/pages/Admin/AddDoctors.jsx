@@ -3,7 +3,8 @@ import { assets } from '../../assets/assets_admin/assets'
 import { AdminContext } from '../../context/AdminContext';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { ColorRing } from 'react-loader-spinner'; 
+import { AppContext } from '../../context/AppContext';
+import { Loader } from 'lucide-react';
 
 const AddDoctors = () => {
     
@@ -18,15 +19,16 @@ const AddDoctors = () => {
    const [degree, setDegree] = useState('');
    const [address1, setAddress1] = useState('');
    const [addresss2, setAddress2] = useState('');
-   const [loading,setLoading] = useState(false)
-
+   
+   const {loading,setLoading} = useContext(AppContext)
    const {backendUrl,aToken} = useContext(AdminContext)
 
    const onSubmitHandler = async(event)=>{
       event.preventDefault()
-      if(loading) return;
+      
 
       try {
+         setLoading(true)
          if(!docImg){
             return toast.error("Image Not Selected")
          }
@@ -76,7 +78,14 @@ const AddDoctors = () => {
    }
 
    return (
-      <form onSubmit={onSubmitHandler} className='m-5 w-full'>
+      <>
+         {loading && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+               <Loader className="animate-spin text-primary w-16 h-16" />
+            </div>
+         )}
+
+      <form onSubmit={onSubmitHandler} className={`m-5 w-full ${loading ? 'opacity-45':''}`}>
          <p className='mb-3 text-lg font-medium'>Add Doctor</p>
          <div className='bg-white px-8 py-8 border rounded w-full max-w-4xl max-h-[80vh] overflow-y-scroll'>
             <div className='flex items-center gap-4 mb-8 text-gray-500'>
@@ -159,23 +168,13 @@ const AddDoctors = () => {
             <button
                type="submit"
                className="bg-primary px-10 py-3 mt-4 text-white rounded-full flex items-center"
-               disabled={loading} // Disable button while loading
             >
-               {loading ? 'Adding Doctor...' : 'Add Doctor'}
-               {loading && (
-                 
-                     <ColorRing
-                        visible={true}
-                        height="30"
-                        width="30"
-                        ariaLabel="color-ring-loading"
-                        colors={['#fff', '#fff', '#fff', '#fff', '#fff']}
-                     />
-               )}
+             Add Doctor
             </button>
             
          </div>
       </form>
+      </>
    )
 }
 

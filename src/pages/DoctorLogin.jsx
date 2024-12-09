@@ -1,13 +1,16 @@
 import React, { useContext, useState } from 'react'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { AdminContext } from '../context/AdminContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { DoctorContext } from '../context/DoctorContext';
+import { AppContext } from '../context/AppContext';
+import { Loader } from 'lucide-react';
 
 const DoctorLogin = () => {
    const {setDtoken,backendUrl} = useContext(DoctorContext)
+   const {loading,setLoading} = useContext(AppContext)
+
    const navigate = useNavigate();
 
    const [email, setEmail] = useState('')
@@ -19,6 +22,7 @@ const DoctorLogin = () => {
       event.preventDefault()
 
       try {
+         setLoading(true)
 
          const { data } = await axios.post(backendUrl + '/api/doctor/login', {
             email,
@@ -38,12 +42,21 @@ const DoctorLogin = () => {
          toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
          console.error(error);
 
+      }finally{
+         setLoading(false)
       }
 
 
    }
 
    return (
+      <>
+         {loading && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+               <Loader className="animate-spin text-primary w-16 h-16" />
+            </div>
+         )}
+
       <div className='flex mx-16 my-10 max-sm:mx-auto '>
          <div className=' flex w-full'>
             <div className='hidden lg:flex h-[80vh] w-1/2 items-center justify-center relative'>
@@ -114,7 +127,7 @@ const DoctorLogin = () => {
          </div>
       </div>
 
-
+    </>
    )
 }
 

@@ -2,23 +2,31 @@ import React, { useContext, useEffect } from 'react';
 import { DoctorContext } from '../../context/DoctorContext';
 import { assets } from '../../assets/assets_admin/assets';
 import { AppContext } from '../../context/AppContext';
+import { Loader } from 'lucide-react';
 
 const DoctorDashboard = () => {
-   const { dashData, doctorDashboard, dToken, completeAppointment, cancelAppointment } = useContext(DoctorContext);
+   const { dashData, doctorDashboard, dToken, completeAppointment, cancelAppointment,loading } = useContext(DoctorContext);
    const { currency, slotDateFormat } = useContext(AppContext);
 
    useEffect(() => {
       if (dToken) {
          doctorDashboard();
       }
-   }, [dToken, doctorDashboard]);
+   }, [dToken]);
 
    if (!dashData) {
       return <p>Loading...</p>; // Add a loading state or alternative UI when dashData is undefined.
    }
 
    return (
-      <div className="m-5">
+      <>
+         {loading && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+               <Loader className="animate-spin text-primary w-16 h-16" />
+            </div>
+         )}
+
+      <div className={`m-5 ${loading ? 'opacity-45':''}`}>
          <div className="flex flex-wrap gap-3">
             <div className="flex items-center gap-2 bg-white p-4 min-w-52 rounded border-2 border-gray-100 cursor-pointer hover:scale-105 transition-all">
                <img className="w-14" src={assets.earning_icon} alt="Earnings" />
@@ -91,6 +99,7 @@ const DoctorDashboard = () => {
             </div>
          </div>
       </div>
+      </>
    );
 };
 

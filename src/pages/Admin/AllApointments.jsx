@@ -2,10 +2,11 @@ import React, { useContext, useEffect } from 'react'
 import { AdminContext } from '../../context/AdminContext'
 import { AppContext } from '../../context/AppContext'
 import {assets} from '../../assets/assets_admin/assets.js'
+import { Loader } from 'lucide-react';
 
 const AllApointments = () => {
    
-   const { aToken, appointments, getAllAppointments, cancelAppointment } = useContext(AdminContext)
+   const { aToken, appointments, getAllAppointments, cancelAppointment,loading } = useContext(AdminContext)
    const { calculateAge, slotDateFormat, currency } = useContext(AppContext)
 
 
@@ -16,7 +17,14 @@ const AllApointments = () => {
    },[aToken])
 
   return (
-    <div className='w-full max-w-6xl m-5'>
+   <>
+        {loading && (
+           <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50">
+              <Loader className="animate-spin text-primary w-16 h-16" />
+           </div>
+        )}
+
+    <div className={`w-full max-w-6xl m-5 ${loading? 'opacity-45':''}`}>
         <p className='mb-3 text-lg font-medium'>All Appointments</p>
 
         <div className='bg-white border rounded text-sm max-h-[80vh] overflow-y-scroll min-h-[60vh]'>
@@ -55,6 +63,7 @@ const AllApointments = () => {
         }
         </div>
     </div>
+     </>
   )
 }
 
